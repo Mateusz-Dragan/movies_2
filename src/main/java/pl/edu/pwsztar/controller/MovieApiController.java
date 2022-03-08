@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pwsztar.domain.dto.CreateMovieDto;
+import pl.edu.pwsztar.domain.dto.DetailsMovieDto;
 import pl.edu.pwsztar.domain.dto.MovieDto;
 import pl.edu.pwsztar.service.MovieService;
 
@@ -32,7 +33,7 @@ public class MovieApiController {
     public ResponseEntity<List<MovieDto>> getMovies() {
         LOGGER.info("find all movies");
 
-        List<MovieDto> moviesDto = movieService.findAll();
+        List<MovieDto> moviesDto = movieService.findAllByOrderByYearDesc();
         return new ResponseEntity<>(moviesDto, HttpStatus.OK);
     }
 
@@ -54,4 +55,12 @@ public class MovieApiController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @CrossOrigin
+    @GetMapping(value = "/movies/{movieId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<DetailsMovieDto> getMovieDetails(@PathVariable Long movieId) {
+        LOGGER.info("movie details: {}", movieId);
+        DetailsMovieDto detailsMovieDto = movieService.getMovieDetails(movieId);
+
+        return new ResponseEntity<>(detailsMovieDto, HttpStatus.OK);
+    }
 }

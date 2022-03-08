@@ -5,8 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.edu.pwsztar.domain.dto.CreateMovieDto;
+import pl.edu.pwsztar.domain.dto.DetailsMovieDto;
 import pl.edu.pwsztar.domain.dto.MovieDto;
 import pl.edu.pwsztar.domain.entity.Movie;
+import pl.edu.pwsztar.domain.mapper.MovieDetailsMapper;
 import pl.edu.pwsztar.domain.mapper.MovieListMapper;
 import pl.edu.pwsztar.domain.mapper.MovieMapper;
 import pl.edu.pwsztar.domain.repository.MovieRepository;
@@ -22,15 +24,17 @@ public class MovieServiceImpl implements MovieService {
     private final MovieRepository movieRepository;
     private final MovieListMapper movieListMapper;
     private final MovieMapper movieMapper;
+    private final MovieDetailsMapper movieDetailsMapper;
 
     @Autowired
     public MovieServiceImpl(MovieRepository movieRepository,
                             MovieListMapper movieListMapper,
-                            MovieMapper movieMapper) {
+                            MovieMapper movieMapper, MovieDetailsMapper movieDetailsMapper) {
 
         this.movieRepository = movieRepository;
         this.movieListMapper = movieListMapper;
         this.movieMapper = movieMapper;
+        this.movieDetailsMapper = movieDetailsMapper;
     }
 
     @Override
@@ -46,8 +50,21 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public List<MovieDto> findAllByOrderByYearDesc() {
+        List<Movie> movies = movieRepository.findAllByOrderByYearDesc();
+        return movieListMapper.mapToDto(movies);
+    }
+
+
+    @Override
     public void deleteMovie(Long movieId) {
         movieRepository.deleteById(movieId);
+    }
+
+    @Override
+    public DetailsMovieDto getMovieDetails(Long movieId) {
+        Movie movie = movieRepository.findOneByMovieId(movieId);
+        return movieDetailsMapper.mapToEntity(movie);
     }
 
 }

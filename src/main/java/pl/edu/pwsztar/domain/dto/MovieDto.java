@@ -8,6 +8,15 @@ public class MovieDto implements Serializable {
     private String title;
     private String image;
     private Integer year;
+    private String videoId;
+
+    public String getVideoId() {
+        return videoId;
+    }
+
+    public void setVideoId(String videoId) {
+        this.videoId = videoId;
+    }
 
     public MovieDto() {
     }
